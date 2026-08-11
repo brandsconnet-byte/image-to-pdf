@@ -1,0 +1,6 @@
+{
+  "name": "Image to PDF Converter",
+  "description": "Convert, reorder, edit, and merge multiple images into a single customizable PDF document.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
