@@ -21,6 +21,7 @@ import { LanguageCode } from './utils/i18n';
 import { generatePdf } from './utils/pdfGenerator';
 import { triggerFileDownload } from './utils/downloadHelper';
 import { FileText, Sliders, Layers, Check, AlertCircle, Sparkles, FileCheck, ArrowRight } from 'lucide-react';
+import { Analytics } from '@vercel/analytics/react';
 
 const DEFAULT_SETTINGS: PdfSettings = {
   paperSize: 'a4',
@@ -610,6 +611,7 @@ export default function App() {
           <span>{toastMessage}</span>
         </div>
       )}
+      <Analytics />
     </div>
   );
 }
