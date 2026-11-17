@@ -16,6 +16,7 @@ import { DownloadHistory } from './components/DownloadHistory';
 import { BottomConvertBar } from './components/BottomConvertBar';
 import { ConvertedPdfsGallery } from './components/ConvertedPdfsGallery';
 import { RecentConvertedPdfsSection } from './components/RecentConvertedPdfsSection';
+import { ProUpgradeModal } from './components/ProUpgradeModal';
 import { ImageItem, PdfSettings, ViewMode, GeneratedPdfHistory, ImageFilterType } from './types';
 import { LanguageCode } from './utils/i18n';
 import { generatePdf } from './utils/pdfGenerator';
@@ -74,6 +75,7 @@ export default function App() {
   const [history, setHistory] = useState<GeneratedPdfHistory[]>([]);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState<LanguageCode>('en');
+  const [isProModalOpen, setIsProModalOpen] = useState(false);
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [activeMobileTab, setActiveMobileTab] = useState<'pages' | 'settings'>('pages');
@@ -82,6 +84,20 @@ export default function App() {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3500);
   };
+
+  // Check for successful payment return from Polar
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('checkout') === 'success') {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+      showToast('🎉 Pro Unlocked Successfully! Thank you for your support!');
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
 
   // Helper to process uploaded File objects into ImageItem models
   const processFiles = useCallback(async (files: FileList | File[]) => {
@@ -386,6 +402,7 @@ export default function App() {
         }}
         currentLanguage={currentLanguage}
         onLanguageChange={setCurrentLanguage}
+        onOpenProModal={() => setIsProModalOpen(true)}
       />
 
       {/* Hidden File Input for header button */}
@@ -436,16 +453,45 @@ export default function App() {
             }}
             onNavigateToUpload={() => handleTabChange('editor')}
             currentLanguage={currentLanguage}
+            onOpenProModal={() => setIsProModalOpen(true)}
           />
         ) : (
           <div className="space-y-8">
             {items.length === 0 ? (
-              /* Empty State: Upload Zone */
+              /* Empty State: Upload Zone & Frontpage Pro Banner */
               <div className="max-w-3xl mx-auto py-4 space-y-8">
                 <UploadZone
                   onFilesSelected={processFiles}
                   currentLanguage={currentLanguage}
                 />
+
+                {/* Frontpage Pro Feature Banner */}
+                <div className="bg-gradient-to-r from-indigo-900 via-violet-900 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6 border border-indigo-500/30 relative overflow-hidden">
+                  <div className="absolute right-0 top-0 w-48 h-48 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none" />
+                  <div className="flex items-center gap-4 relative z-10">
+                    <div className="w-12 h-12 rounded-2xl bg-amber-400/20 text-amber-300 flex items-center justify-center shrink-0 border border-amber-400/30 shadow-inner">
+                      <Sparkles className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-base font-extrabold">ImageToPDF PRO Lifetime Pass</h3>
+                        <span className="px-2 py-0.5 rounded-full bg-amber-400 text-slate-900 text-[10px] font-black">
+                          $5 USD
+                        </span>
+                      </div>
+                      <p className="text-xs text-indigo-200 mt-0.5">
+                        Unlock unlimited batch conversion, OCR text search, and priority support forever.
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setIsProModalOpen(true)}
+                    className="px-5 py-2.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-900 font-extrabold text-xs shadow-md transition-all cursor-pointer flex items-center gap-2 shrink-0 relative z-10"
+                  >
+                    <span>Upgrade to PRO</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             ) : (
               /* Main Dashboard Layout: Split View on Desktop */
@@ -610,6 +656,12 @@ export default function App() {
           <span>{toastMessage}</span>
         </div>
       )}
+
+      {/* Pro Upgrade Modal */}
+      <ProUpgradeModal
+        isOpen={isProModalOpen}
+        onClose={() => setIsProModalOpen(false)}
+      />
     </div>
   );
 }

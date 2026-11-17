@@ -27,6 +27,7 @@ interface ConvertedPdfsGalleryProps {
   onOpenFullPreview: (item: GeneratedPdfHistory) => void;
   onNavigateToUpload: () => void;
   currentLanguage?: LanguageCode;
+  onOpenProModal?: () => void;
 }
 
 export const ConvertedPdfsGallery: React.FC<ConvertedPdfsGalleryProps> = ({
@@ -36,6 +37,7 @@ export const ConvertedPdfsGallery: React.FC<ConvertedPdfsGalleryProps> = ({
   onOpenFullPreview,
   onNavigateToUpload,
   currentLanguage = 'en',
+  onOpenProModal,
 }) => {
   const [selectedId, setSelectedId] = useState<string | null>(
     history.length > 0 ? history[0].id : null
@@ -290,6 +292,30 @@ export const ConvertedPdfsGallery: React.FC<ConvertedPdfsGalleryProps> = ({
           </div>
         </div>
       )}
+
+      {/* Buy Me a Coffee & Support Pro Card */}
+      <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-indigo-600 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center shrink-0 shadow-md">
+            <Sparkles className="w-7 h-7 text-amber-200" />
+          </div>
+          <div>
+            <h3 className="text-lg font-bold">Enjoying ImageToPDF? Buy us a coffee!</h3>
+            <p className="text-xs text-amber-100/90 mt-0.5">
+              Support further development or unlock Lifetime Pro access for just $5 USD.
+            </p>
+          </div>
+        </div>
+        <button
+          onClick={() => {
+            if (onOpenProModal) onOpenProModal();
+          }}
+          className="px-6 py-3 rounded-2xl bg-white hover:bg-amber-50 text-slate-900 font-extrabold text-xs shadow-md transition-all cursor-pointer flex items-center gap-2 shrink-0"
+        >
+          <span>☕ Buy Coffee / Unlock Pro ($5)</span>
+          <ArrowRight className="w-4 h-4 text-indigo-600" />
+        </button>
+      </div>
     </div>
   );
 };

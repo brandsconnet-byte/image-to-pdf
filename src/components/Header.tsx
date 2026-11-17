@@ -19,6 +19,7 @@ interface HeaderProps {
   onAddMoreImages: () => void;
   currentLanguage: LanguageCode;
   onLanguageChange: (lang: LanguageCode) => void;
+  onOpenProModal: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -34,6 +35,7 @@ export const Header: React.FC<HeaderProps> = ({
   onAddMoreImages,
   currentLanguage,
   onLanguageChange,
+  onOpenProModal,
 }) => {
   const t = (key: string) => getTranslation(currentLanguage, key);
 
@@ -165,6 +167,16 @@ export const Header: React.FC<HeaderProps> = ({
               )}
             </>
           )}
+
+          {/* Upgrade Pro ($5) Button */}
+          <button
+            onClick={onOpenProModal}
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white text-xs font-bold shadow-xs transition-all cursor-pointer animate-pulse"
+            title="Unlock Lifetime Pro for $5"
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Pro $5</span>
+          </button>
 
           {/* Language Selector */}
           <LanguageSwitcher
