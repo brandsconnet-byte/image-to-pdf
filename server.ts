@@ -33,7 +33,7 @@ async function startServer() {
           'Accept': 'application/json'
         },
         body: JSON.stringify({
-          product_id: targetProductId,
+          products: [targetProductId],
           success_url: successUrl || defaultSuccessUrl,
           customer_email: customerEmail || undefined,
         })
@@ -42,7 +42,8 @@ async function startServer() {
       const data = await polarResponse.json();
 
       if (!polarResponse.ok) {
-        throw new Error(data.detail || data.message || 'Failed to create Polar checkout');
+        console.error('Polar API Error Response:', data);
+        throw new Error(data.detail || data.message || JSON.stringify(data) || 'Failed to create Polar checkout');
       }
 
       res.json({ url: data.url, id: data.id });

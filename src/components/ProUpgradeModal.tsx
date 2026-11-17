@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Sparkles, CheckCircle2, ShieldCheck, Zap, ArrowLeft, ExternalLink } from 'lucide-react';
+import { X, Sparkles, CheckCircle2, ShieldCheck, Zap, ArrowLeft } from 'lucide-react';
 
 interface ProUpgradeModalProps {
   isOpen: boolean;
@@ -9,11 +9,8 @@ interface ProUpgradeModalProps {
 export const ProUpgradeModal: React.FC<ProUpgradeModalProps> = ({ isOpen, onClose }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [showDirectFallback, setShowDirectFallback] = useState(false);
 
   if (!isOpen) return null;
-
-  const directCheckoutUrl = `https://buy.polar.sh/df9d7e1b-60d4-4ac2-8d91-aabb80d586ce`;
 
   const handleCheckout = async () => {
     setIsLoading(true);
@@ -37,8 +34,7 @@ export const ProUpgradeModal: React.FC<ProUpgradeModalProps> = ({ isOpen, onClos
       }
     } catch (err: any) {
       console.error(err);
-      setErrorMessage(err.message || 'Could not load checkout automatically.');
-      setShowDirectFallback(true);
+      setErrorMessage(err.message || 'Could not load checkout. Please try again.');
       setIsLoading(false);
     }
   };
@@ -135,17 +131,6 @@ export const ProUpgradeModal: React.FC<ProUpgradeModalProps> = ({ isOpen, onClos
                 </>
               )}
             </button>
-
-            {/* Direct Link Fallback button */}
-            <a
-              href={directCheckoutUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full py-3 px-6 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer border border-slate-200"
-            >
-              <span>Open Direct Polar Checkout Link</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
           </div>
 
           <div className="flex items-center justify-center gap-2 text-[11px] text-slate-400">
